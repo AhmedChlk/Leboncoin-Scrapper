@@ -2,7 +2,13 @@ from bot.handler.start import start_cmd
 from bot.handler.help import help_cmd
 from aiogram.filters import Command
 from bot.handler.search.search_cmd import search_cmd
-from bot.handler.extract.extract_cmd import extract_cmd, extract_description_cmd, list_attributes_elements_cmd, list_attributes_cmd, list_elements_cmd, max_cmd, min_cmd, mean_cmd
+from bot.handler.extract.extract_cmd import (
+    list_attributes_elements_cmd,
+    list_elements_cmd,
+    max_cmd,
+    min_cmd,
+    mean_cmd,
+)
 from bot.handler.filter.filter_cmd import filter_cmd, stats_cmd, chart_cmd
 from bot.handler.export.export_cmd import export_cmd, export_callback, export_json_cmd, export_csv_cmd, export_excel_cmd, export_stats_cmd
 from bot.handler.cleanup_cmd import cleanup_cmd, cleanup_status_cmd
@@ -59,10 +65,7 @@ def register_handlers(dp):
     dp.message.register(help_cmd, Command("help"))
     dp.callback_query.register(help_callback, lambda c: c.data == "show_help")
     dp.message.register(search_cmd, Command("search"))
-    dp.message.register(extract_cmd, Command("extract"))
-    dp.message.register(extract_description_cmd, Command("description"))
     dp.message.register(list_attributes_elements_cmd, Command("list"))
-    dp.message.register(list_attributes_cmd, Command("list_attributes"))
     dp.message.register(list_elements_cmd, Command("list_elements"))
     dp.message.register(max_cmd, Command("max"))
     dp.message.register(min_cmd, Command("min"))
