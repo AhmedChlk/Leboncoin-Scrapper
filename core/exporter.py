@@ -1,10 +1,12 @@
 import json
 import csv
 import pandas as pd
+from pathlib import Path
 import os
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 import logging
+from core.constants import EXPORTS_DIR
 
 # Imports conditionnels pour Google Sheets
 try:
@@ -21,30 +23,29 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class DataExporter:
-    """Classe pour exporter les données vers différents formats"""
-    
-    def __init__(self, output_dir: str = "exports"):
-        self.output_dir = output_dir
+    """Utility to export scraped data into multiple formats."""
+
+    def __init__(self, output_dir: Path = EXPORTS_DIR) -> None:
+        self.output_dir = Path(output_dir)
         self._ensure_output_dir()
         
-    def _ensure_output_dir(self):
-        """Crée le répertoire de sortie s'il n'existe pas"""
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
+    def _ensure_output_dir(self) -> None:
+        """Create the output directory if it does not exist."""
+        self.output_dir.mkdir(parents=True, exist_ok=True)
             
     def _get_timestamp(self) -> str:
-        """Retourne un timestamp pour les noms de fichiers"""
+        """Return a timestamp used for filenames."""
         return datetime.now().strftime("%Y%m%d_%H%M%S")
     
     def export_to_json(self, data: List[Dict[str, Any]], filename: Optional[str] = None) -> str:
         """Exporte les données vers un fichier JSON"""
         if filename is None:
             filename = f"export_{self._get_timestamp()}.json"
-        
-        filepath = os.path.join(self.output_dir, filename)
+
+        filepath = self.output_dir / filename
         
         try:
-            with open(filepath, 'w', encoding='utf-8') as f:
+            with filepath.open("w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             
             logger.info(f"Données exportées vers JSON: {filepath}")
@@ -57,8 +58,8 @@ class DataExporter:
         """Exporte les données vers un fichier CSV"""
         if filename is None:
             filename = f"export_{self._get_timestamp()}.csv"
-        
-        filepath = os.path.join(self.output_dir, filename)
+
+        filepath = self.output_dir / filename
         
         try:
             if not data:
@@ -71,7 +72,7 @@ class DataExporter:
             # Aplatir les colonnes complexes (comme 'images', 'attributes')
             df_flat = self._flatten_dataframe(df)
             
-            df_flat.to_csv(filepath, index=False, encoding='utf-8')
+            df_flat.to_csv(filepath, index=False, encoding="utf-8")
             
             logger.info(f"Données exportées vers CSV: {filepath}")
             return filepath
@@ -83,8 +84,8 @@ class DataExporter:
         """Exporte les données vers un fichier Excel"""
         if filename is None:
             filename = f"export_{self._get_timestamp()}.xlsx"
-        
-        filepath = os.path.join(self.output_dir, filename)
+
+        filepath = self.output_dir / filename
         
         try:
             if not data:

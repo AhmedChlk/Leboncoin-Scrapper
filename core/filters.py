@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from typing import List, Dict, Any, Optional
+from pathlib import Path
 
 from core.statistics import compute_stats
+from core.constants import DATA_DIR
 
 
 def _extract_price(ad: Dict[str, Any]) -> Optional[float]:
+    """Return the price value of *ad* if present."""
     values = find_element_value(ad, "price")
     if not values:
         return None
@@ -17,6 +20,7 @@ def _extract_price(ad: Dict[str, Any]) -> Optional[float]:
 
 
 def _extract_city(ad: Dict[str, Any]) -> Optional[str]:
+    """Return the city name for *ad* if present."""
     values = find_element_value(ad, "city")
     if values:
         return str(values[0] if isinstance(values, list) else values)
@@ -24,6 +28,7 @@ def _extract_city(ad: Dict[str, Any]) -> Optional[str]:
 
 
 def _extract_brand(ad: Dict[str, Any]) -> Optional[str]:
+    """Return the brand for *ad* if present."""
     values = get_attribute_value(ad, "brand")
     if values:
         return str(values[0] if isinstance(values, list) else values)
@@ -57,17 +62,17 @@ def filter_ads(
         result.append(ad)
     return result
 
-def load_ads_data(folder: str = "data") -> list[dict]:
-    import json, os
-    ads = []
-    if not os.path.exists(folder):
+def load_ads_data(folder: Path = DATA_DIR) -> list[dict]:
+    """Load all ads JSON files from *folder*."""
+    import json
+    ads: list[dict] = []
+    folder = Path(folder)
+    if not folder.exists():
         return ads
-    for file in os.listdir(folder):
-        if file.startswith("ads_") and file.endswith(".json"):
-            path = os.path.join(folder, file)
-            try:
-                with open(path, "r", encoding="utf-8") as fp:
-                    ads.extend(json.load(fp))
-            except Exception:
-                pass
+    for file in folder.glob("ads_*.json"):
+        try:
+            with file.open("r", encoding="utf-8") as fp:
+                ads.extend(json.load(fp))
+        except Exception:
+            pass
     return ads

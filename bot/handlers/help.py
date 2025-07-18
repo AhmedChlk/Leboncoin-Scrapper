@@ -2,6 +2,7 @@ from aiogram.types import Message
 from core.statistics import compute_stats
 import json
 import os
+from bot.utils.message_utils import send_long_message
 
 COMMANDS_HELP = [
     {
@@ -162,4 +163,4 @@ def generate_help_text():
     return text
 
 async def help_cmd(message: Message):
-    await message.answer(generate_help_text(), parse_mode="HTML")
+    await send_long_message(message, generate_help_text())

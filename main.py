@@ -1,5 +1,6 @@
 import asyncio
 from aiogram import Bot, Dispatcher
+import infra.logger  # noqa: F401
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from bot.config import TOKEN

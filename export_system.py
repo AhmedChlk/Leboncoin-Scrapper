@@ -9,6 +9,7 @@ import os
 import sys
 import argparse
 import logging
+import infra.logger  # noqa: F401
 from pathlib import Path
 from typing import Optional
 
@@ -16,21 +17,17 @@ from typing import Optional
 sys.path.append(str(Path(__file__).parent / "scrap"))
 
 from core.exporter import DataExporter
+logger = logging.getLogger(__name__)
 
 # Import conditionnel pour le serveur web
 try:
     from scrap.core.download_server import DownloadServer
     DOWNLOAD_SERVER_AVAILABLE = True
 except ImportError:
-    DOWNLOAD_SERVER_AVAILABLE = False
     DownloadServer = None
+    DOWNLOAD_SERVER_AVAILABLE = False
 
 # Configuration du logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 def load_data_from_file(filepath: str) -> list:
     """Charge les données depuis un fichier JSON ou utilise le répertoire par défaut"""
