@@ -73,7 +73,7 @@ def find_element_value(data, element_name, index=None):
 def _get_len_dossier():
     from pathlib import Path
 
-    dossier = Path("../tools/scrap/data/")
+    dossier = Path("data")
     fichiers = [f for f in dossier.iterdir() if f.is_file()]
 
     print(f"Nombre de fichiers : {len(fichiers)}")
@@ -81,9 +81,9 @@ def _get_len_dossier():
 
 def get_all_values(name, mode):
     """
-    Récupère toutes les valeurs numériques d'un attribut ou élément dans tous les fichiers de scrap/tools/scrap/data.
+    Récupère toutes les valeurs numériques d'un attribut ou élément dans tous les fichiers de data/.
     """
-    data_dir = os.path.join('scrap', 'tools', 'scrap', 'data')
+    data_dir = os.path.join('data')
     values = []
     for file in os.listdir(data_dir):
         if file.startswith('ads_') and file.endswith('.json'):

@@ -15,7 +15,7 @@ from typing import Optional
 # Ajouter le répertoire scrap au path
 sys.path.append(str(Path(__file__).parent / "scrap"))
 
-from scrap.core.exporter import DataExporter
+from core.exporter import DataExporter
 
 # Import conditionnel pour le serveur web
 try:

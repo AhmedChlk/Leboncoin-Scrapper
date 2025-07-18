@@ -15,7 +15,7 @@ def fetch_ads(url: str, nbr_page: int):
         html = client.get(url)
         if html is None:
             continue
-        count = extraire_ads_et_sauvegarder(html, f"scrap/tools/scrap/data/ads_{i + 1}.json")
+        count = extraire_ads_et_sauvegarder(html, f"data/ads_{i + 1}.json")
         if count:
             total_ads += count
     return total_ads

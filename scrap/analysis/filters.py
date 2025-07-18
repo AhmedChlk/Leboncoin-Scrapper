@@ -8,7 +8,7 @@ def load_ads_data() -> List[Dict[str, Any]]:
     """
     Charge toutes les données d'annonces depuis les fichiers ads_*.json
     """
-    data_dir = os.path.join("scrap", "tools", "scrap", "data")
+    data_dir = os.path.join("data")
     all_ads = []
     
     if not os.path.exists(data_dir):

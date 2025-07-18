@@ -1,7 +1,14 @@
 from aiogram.types import Message, InputFile
 from scrap.analysis.filters import load_ads_data, filter_ads, filter_by_price, filter_by_location
-from scrap.analysis.statistics import get_summary_statistics
-from scrap.analysis.charts import create_price_histogram, create_brand_chart, create_location_chart, create_summary_chart, plot_price_histogram, plot_location_histogram
+from core.statistics import get_summary_statistics
+from core.charts import (
+    create_price_histogram,
+    create_brand_chart,
+    create_location_chart,
+    create_summary_chart,
+    plot_price_histogram,
+    plot_location_histogram,
+)
 from aiogram.types import BufferedInputFile
 from scrap.jobs.statistic import get_attribute_value
 

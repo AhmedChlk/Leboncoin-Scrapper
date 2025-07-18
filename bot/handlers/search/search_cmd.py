@@ -1,5 +1,5 @@
 from aiogram.types import Message
-from scrap.jobs.fetch_ads import fetch_ads
+from core.scraping import fetch_ads
 import os
 import glob
 
@@ -16,7 +16,7 @@ async def search_cmd(message: Message):
         return
     
     # Supprimer les anciennes données avant de commencer le nouveau scraping
-    data_dir = os.path.join("scrap", "tools", "scrap", "data")
+    data_dir = os.path.join("data")
     if os.path.exists(data_dir):
         # Supprimer tous les fichiers ads_*.json
         pattern = os.path.join(data_dir, "ads_*.json")
