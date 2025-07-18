@@ -54,14 +54,14 @@ class BotExporter:
             
         except Exception as e:
             logger.error(f"Erreur lors de l'export JSON: {e}")
-            await message.answer(f"❌ Erreur lors de l'export JSON: {e}")
+            await message.answer(f'❌ Erreur lors de l'export JSON: {e}', parse_mode='HTML')
             return False
     
     async def export_and_send_csv(self, message: Message, data: List[Dict[str, Any]], filename: Optional[str] = None) -> bool:
         """Exporte et envoie un fichier CSV"""
         try:
             if not data:
-                await message.answer("❌ Aucune donnée à exporter")
+                await message.answer("❌ Aucune donnée à exporter", parse_mode='HTML')
                 return False
             
             # Convertir en DataFrame et aplatir
@@ -88,14 +88,13 @@ class BotExporter:
             
         except Exception as e:
             logger.error(f"Erreur lors de l'export CSV: {e}")
-            await message.answer(f"❌ Erreur lors de l'export CSV: {e}")
-            return False
+            await message.answer(f'❌ Erreur lors de l'export CSV: {e}', parse_mode='HTML')
     
     async def export_and_send_excel(self, message: Message, data: List[Dict[str, Any]], filename: Optional[str] = None) -> bool:
         """Exporte et envoie un fichier Excel"""
         try:
             if not data:
-                await message.answer("❌ Aucune donnée à exporter")
+                await message.answer("❌ Aucune donnée à exporter", parse_mode='HTML')
                 return False
             
             # Convertir en DataFrame
@@ -129,18 +128,18 @@ class BotExporter:
             
         except Exception as e:
             logger.error(f"Erreur lors de l'export Excel: {e}")
-            await message.answer(f"❌ Erreur lors de l'export Excel: {e}")
+            await message.answer(f'❌ Erreur lors de l'export Excel: {e}', parse_mode='HTML')
             return False
     
     async def export_all_formats(self, message: Message, data: List[Dict[str, Any]], filename: Optional[str] = None) -> bool:
         """Exporte et envoie tous les formats"""
         try:
             if not data:
-                await message.answer("❌ Aucune donnée à exporter")
+                await message.answer("❌ Aucune donnée à exporter", parse_mode='HTML')
                 return False
             
             # Message de progression
-            progress_msg = await message.answer("🔄 Export en cours...")
+            progress_msg = await message.answer("🔄 Export en cours...", parse_mode="HTML")
             
             success_count = 0
             total_formats = 3
@@ -162,14 +161,15 @@ class BotExporter:
                 f"✅ Export terminé !\n"
                 f"📊 {len(data)} annonces exportées\n"
                 f"📁 {success_count}/{total_formats} formats envoyés\n"
-                f"📅 {datetime.now().strftime('%d/%m/%Y %H:%M')}"
+                f"📅 {datetime.now().strftime('%d/%m/%Y %H:%M')}",
+                parse_mode="HTML",
             )
             
             return success_count > 0
             
         except Exception as e:
             logger.error(f"Erreur lors de l'export multiple: {e}")
-            await message.answer(f"❌ Erreur lors de l'export: {e}")
+            await message.answer(f'❌ Erreur lors de l'export: {e}', parse_mode='HTML')
             return False
 
 # Instance globale
@@ -182,7 +182,7 @@ async def export_cmd(message: Message):
         data = bot_exporter.load_data_from_files()
         
         if not data:
-            await message.answer("❌ Aucune donnée trouvée. Utilisez d'abord /search pour récupérer des annonces.")
+            await message.answer("❌ Aucune donnée trouvée. Utilisez d'abord /search pour récupérer des annonces.", parse_mode='HTML')
             return
         
         # Créer les boutons pour choisir le format
@@ -251,7 +251,7 @@ async def export_json_cmd(message: Message):
         if data:
             await bot_exporter.export_and_send_json(message, data)
         else:
-            await message.answer("❌ Aucune donnée trouvée")
+            await message.answer("❌ Aucune donnée trouvée", parse_mode='HTML')
     except Exception as e:
         await message.answer(f"❌ Erreur: {e}")
 
@@ -262,7 +262,7 @@ async def export_csv_cmd(message: Message):
         if data:
             await bot_exporter.export_and_send_csv(message, data)
         else:
-            await message.answer("❌ Aucune donnée trouvée")
+            await message.answer("❌ Aucune donnée trouvée", parse_mode='HTML')
     except Exception as e:
         await message.answer(f"❌ Erreur: {e}")
 
@@ -273,7 +273,7 @@ async def export_excel_cmd(message: Message):
         if data:
             await bot_exporter.export_and_send_excel(message, data)
         else:
-            await message.answer("❌ Aucune donnée trouvée")
+            await message.answer("❌ Aucune donnée trouvée", parse_mode='HTML')
     except Exception as e:
         await message.answer(f"❌ Erreur: {e}")
 
@@ -283,7 +283,7 @@ async def export_stats_cmd(message: Message):
         data = bot_exporter.load_data_from_files()
         
         if not data:
-            await message.answer("❌ Aucune donnée trouvée")
+            await message.answer("❌ Aucune donnée trouvée", parse_mode='HTML')
             return
         
         # Calculer les statistiques

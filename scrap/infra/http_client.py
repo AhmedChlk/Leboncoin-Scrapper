@@ -1,14 +1,16 @@
 import io
 import json
 import logging
+from pathlib import Path
 import os
 from http.cookies import SimpleCookie
 from typing import Optional, Dict
 from urllib.parse import urlencode
 
 from curl_cffi import Curl, CurlOpt, CurlInfo, CurlError
+from core.exceptions import ScrapingError
 
-COOKIES_PATH = "scrap/data/cookies.json"
+COOKIES_PATH = Path("scrap/data/cookies.json")
 DEFAULT_UA = (
     "Mozilla/5.0 (X11; Linux x86_64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -27,9 +29,9 @@ class HttpClient:
         self._load_cookies()
 
     def _load_cookies(self):
-        if os.path.exists(COOKIES_PATH):
+        if COOKIES_PATH.exists():
             try:
-                with open(COOKIES_PATH, "r", encoding="utf-8") as f:
+                with COOKIES_PATH.open("r", encoding="utf-8") as f:
                     data = json.load(f)
                 for k, v in data.items():
                     self.cookies[k] = v
@@ -39,7 +41,7 @@ class HttpClient:
 
     def _save_cookies(self):
         try:
-            with open(COOKIES_PATH, "w", encoding="utf-8") as f:
+            with COOKIES_PATH.open("w", encoding="utf-8") as f:
                 json.dump({k: m.value for k, m in self.cookies.items()}, f, indent=2)
             self.logger.info("Cookies sauvegardés.")
         except Exception as e:
@@ -81,19 +83,22 @@ class HttpClient:
                         if isinstance(data, str):
                             data = data.encode()
                         self.curl.setopt(CurlOpt.POSTFIELDS, data)
-                self.curl.perform()
+                try:
+                    self.curl.perform()
+                except CurlError as exc:
+                    self.logger.warning(f"Tentative {attempt} échouée: {exc}")
+                    if attempt == self.max_retries:
+                        raise ScrapingError(f"Request failed for {url}") from exc
+                    continue
                 status = self.curl.getinfo(CurlInfo.RESPONSE_CODE)
                 self._update_cookies(header_buf.getvalue())
                 self._save_cookies()
                 if 200 <= status < 400:
                     return body.getvalue().decode("utf-8", "ignore")
                 self.logger.error(f"Statut {status} pour {url}")
-            except CurlError as e:
-                self.logger.warning(f"Tentative {attempt} échouée: {e}")
             finally:
                 self.curl.reset()
-        self.logger.error(f"Echec de la requête {method} {url}")
-        return None
+        raise ScrapingError(f"Request {method} {url} failed after {self.max_retries} attempts")
 
     def get(self, url: str, params=None, headers=None) -> Optional[str]:
         return self._request("GET", url, params=params, headers=headers)
