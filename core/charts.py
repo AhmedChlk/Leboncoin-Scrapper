@@ -8,6 +8,48 @@ from scrap.analysis.filters import load_ads_data
 import matplotlib.pyplot as plt
 import io
 
+
+def generate_chart(data: List[Dict[str, Any]], chart_type: str) -> str:
+    """Return a simple ASCII bar chart based on *chart_type*."""
+    chart_type = chart_type.lower()
+
+    if chart_type == "price":
+        dist = get_price_distribution(data)
+        ranges = dist.get("ranges", [])
+        counts = dist.get("counts", [])
+        if not ranges:
+            return "No price data"
+        max_count = max(counts) if counts else 0
+        lines = []
+        for rng, count in zip(ranges, counts):
+            bar = "█" * int(count / max_count * 20) if max_count else ""
+            lines.append(f"{rng}: {bar} ({count})")
+        return "\n".join(lines)
+
+    if chart_type == "brand":
+        stats = get_brand_statistics(data)
+        if not stats:
+            return "No brand data"
+        max_count = max(stats.values()) if stats else 0
+        lines = []
+        for name, count in stats.items():
+            bar = "█" * int(count / max_count * 20) if max_count else ""
+            lines.append(f"{name}: {bar} ({count})")
+        return "\n".join(lines)
+
+    if chart_type == "location":
+        stats = get_location_statistics(data)
+        if not stats:
+            return "No location data"
+        max_count = max(stats.values()) if stats else 0
+        lines = []
+        for name, count in stats.items():
+            bar = "█" * int(count / max_count * 20) if max_count else ""
+            lines.append(f"{name}: {bar} ({count})")
+        return "\n".join(lines)
+
+    raise ValueError("Invalid chart type")
+
 def create_price_histogram(ads: List[Dict[str, Any]], max_bars: int = 10) -> str:
     """
     Crée un histogramme des prix en format texte pour Telegram
