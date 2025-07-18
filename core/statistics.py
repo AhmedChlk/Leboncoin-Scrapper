@@ -164,4 +164,22 @@ def get_summary_statistics() -> Dict[str, Any]:
         "price_distribution": get_price_distribution(ads),
         "brand_stats": get_brand_statistics(ads),
         "location_stats": get_location_statistics(ads)
-    } 
+    }
+
+
+def compute_stats(data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Return basic statistics computed from *data*."""
+    if not data:
+        return {
+            "total_ads": 0,
+            "price_stats": {},
+            "brand_stats": {},
+            "location_stats": {},
+        }
+
+    return {
+        "total_ads": len(data),
+        "price_stats": get_price_statistics(data),
+        "brand_stats": get_brand_statistics(data),
+        "location_stats": get_location_statistics(data),
+    }

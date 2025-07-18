@@ -1,45 +1,57 @@
+from __future__ import annotations
+
+import json
+import re
+from typing import List, Dict
+
 from scrap.infra.http_client import HttpClient
-from scrap.tests.test_http_client import extraire_ads_et_sauvegarder
-from time import sleep
-
 from scrap.tools.sleep_between import sleep_between
-from scrap.tools.replace_page_number import remplacer_page
+
+# Regex used to extract the JSON array of ads from the HTML response
+_ADS_REGEX = re.compile(r'"ads"\s*:\s*(\[.*?\])', re.DOTALL)
 
 
-def fetch_ads(url: str, nbr_page: int):
+def _replace_page(url: str, page: int) -> str:
+    """Return *url* with the page query parameter set to *page*."""
+    if "page=" in url:
+        return re.sub(r"page=\d+", f"page={page}", url)
+    sep = "&" if "?" in url else "?"
+    return f"{url}{sep}page={page}"
+
+
+def _extract_ads(html: str) -> List[Dict]:
+    """Extract the list of ads from a Leboncoin search HTML page."""
+    match = _ADS_REGEX.search(html)
+    if not match:
+        return []
+    try:
+        return json.loads(match.group(1))
+    except json.JSONDecodeError:
+        return []
+
+
+def scrape_ads(url: str, pages: int) -> List[Dict]:
+    """Scrape *pages* pages of *url* and return a list of ads as dictionaries."""
     client = HttpClient()
-    total_ads = 0
-    for i in range(nbr_page):
-        sleep_between(5, 10)
-        url = remplacer_page(url, i + 1)
-        html = client.get(url)
-        if html is None:
+    all_ads: List[Dict] = []
+    for i in range(1, pages + 1):
+        page_url = _replace_page(url, i)
+        sleep_between(1, 3)
+        html = client.get(page_url)
+        if not html:
             continue
-        count = extraire_ads_et_sauvegarder(html, f"data/ads_{i + 1}.json")
-        if count:
-            total_ads += count
-    return total_ads
+        ads = _extract_ads(html)
+        all_ads.extend(ads)
+    return all_ads
 
 
-def fetch_description_ads(url:str):
+def fetch_description_ads(url: str) -> str:
+    """Return the description text from an ad page."""
     client = HttpClient()
     texte = client.get(url)
-    import re
-
-    # Regex pour capturer la chaîne entre "description": " et le guillemet fermant correspondant,
-    # en gérant le fait que la description peut contenir des retours à la ligne, accents, ponctuations, etc.
     pattern = r'"description"\s*:\s*"((?:[^"\\]|\\.)*)"'
-
-    match = re.search(pattern, texte, re.DOTALL)
+    match = re.search(pattern, texte or "", re.DOTALL)
     if match:
-        description = match.group(1)
-        # Optionnel : déséchapper les éventuels caractères échappés JSON
         import codecs
-        description = codecs.decode(description, 'unicode_escape')
-        print(description)
-        return description
-    else:
-        print("Description non trouvée")
-        raise print("pas de description trouver")
-
-#fetch_description_ads("https://www.leboncoin.fr/ad/voitures/2997258439")
+        return codecs.decode(match.group(1), "unicode_escape")
+    raise ValueError("Description non trouvée")
