@@ -4,7 +4,7 @@ from core.statistics import (
     get_brand_statistics,
     get_location_statistics,
 )
-from core.filters import filter_ads
+from scrap.analysis.filters import load_ads_data
 import matplotlib.pyplot as plt
 import io
 
@@ -163,7 +163,7 @@ def get_valid_prices(ads: List[Dict[str, Any]]) -> List[float]:
             except (ValueError, TypeError):
                 pass
         return None
-    from core.statistics import compute_stats
+    from scrap.jobs.statistic import find_element_value
     for ad in ads:
         price_values = find_element_value(ad, "price")
         if price_values:
@@ -197,7 +197,7 @@ def plot_location_histogram(ads: List[Dict[str, Any]], top_n: int = 10) -> Optio
     Génère un histogramme des villes et retourne un buffer BytesIO (image PNG)
     Utilise spécifiquement l'élément 'city'
     """
-    from core.statistics import compute_stats
+    from scrap.jobs.statistic import find_element_value
     
     city_counts = {}
     

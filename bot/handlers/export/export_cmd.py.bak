@@ -14,7 +14,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
 from core.exporter import DataExporter
-from core.filters import filter_ads
+from scrap.analysis.filters import load_ads_data
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Dict, Any, Optional
 
-from core.statistics import compute_stats
+from scrap.jobs.statistic import get_attribute_value, find_element_value
 
 
 def _extract_price(ad: Dict[str, Any]) -> Optional[float]:
@@ -56,18 +56,3 @@ def filter_ads(
 
         result.append(ad)
     return result
-
-def load_ads_data(folder: str = "data") -> list[dict]:
-    import json, os
-    ads = []
-    if not os.path.exists(folder):
-        return ads
-    for file in os.listdir(folder):
-        if file.startswith("ads_") and file.endswith(".json"):
-            path = os.path.join(folder, file)
-            try:
-                with open(path, "r", encoding="utf-8") as fp:
-                    ads.extend(json.load(fp))
-            except Exception:
-                pass
-    return ads

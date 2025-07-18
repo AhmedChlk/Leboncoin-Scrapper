@@ -37,7 +37,7 @@ def load_data_from_file(filepath: str) -> list:
     try:
         # Si aucun fichier spécifié, utiliser le répertoire par défaut
         if not filepath:
-            from scrap.analysis.filters import load_ads_data
+            from core.filters import filter_ads
             data = load_ads_data()
             logger.info(f"Données chargées depuis le répertoire par défaut: {len(data)} éléments")
             return data

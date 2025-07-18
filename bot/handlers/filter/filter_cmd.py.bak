@@ -1,5 +1,5 @@
 from aiogram.types import Message, InputFile
-from core.filters import filter_ads
+from scrap.analysis.filters import load_ads_data, filter_ads, filter_by_price, filter_by_location
 from core.statistics import get_summary_statistics
 from core.charts import (
     create_price_histogram,
@@ -10,7 +10,7 @@ from core.charts import (
     plot_location_histogram,
 )
 from aiogram.types import BufferedInputFile
-from core.statistics import compute_stats
+from scrap.jobs.statistic import get_attribute_value
 
 async def filter_cmd(message: Message):
     """
