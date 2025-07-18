@@ -1,5 +1,4 @@
 from aiogram.types import Message
-from scrap.jobs.fetch_ads import fetch_ads
 from scrap.jobs.statistic import get_attribute_value, find_element_value
 import json
 import os

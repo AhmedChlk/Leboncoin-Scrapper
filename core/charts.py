@@ -1,6 +1,10 @@
 from typing import List, Dict, Any, Optional
-from .statistics import get_price_distribution, get_brand_statistics, get_location_statistics
-from .filters import load_ads_data
+from core.statistics import (
+    get_price_distribution,
+    get_brand_statistics,
+    get_location_statistics,
+)
+from scrap.analysis.filters import load_ads_data
 import matplotlib.pyplot as plt
 import io
 

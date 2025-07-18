@@ -1,7 +1,7 @@
 import statistics
 from typing import List, Dict, Any, Optional, Tuple
 from scrap.jobs.statistic import get_attribute_value, find_element_value
-from .filters import load_ads_data
+from scrap.analysis.filters import load_ads_data
 
 def get_price_statistics(ads: List[Dict[str, Any]]) -> Dict[str, float]:
     """

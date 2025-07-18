@@ -13,7 +13,7 @@ from datetime import datetime
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
-from scrap.core.exporter import DataExporter
+from core.exporter import DataExporter
 from scrap.analysis.filters import load_ads_data
 
 logger = logging.getLogger(__name__)

@@ -12,7 +12,7 @@ def cleanup_ads_data():
     """
     Supprime tous les fichiers ads_*.json du répertoire de données
     """
-    data_dir = os.path.join("scrap", "tools", "scrap", "data")
+    data_dir = os.path.join("data")
     
     if not os.path.exists(data_dir):
         logger.info("Répertoire de données n'existe pas, rien à nettoyer")
@@ -38,7 +38,7 @@ def get_ads_files_count():
     """
     Retourne le nombre de fichiers ads_*.json dans le répertoire de données
     """
-    data_dir = os.path.join("scrap", "tools", "scrap", "data")
+    data_dir = os.path.join("data")
     
     if not os.path.exists(data_dir):
         return 0
