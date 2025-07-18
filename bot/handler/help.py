@@ -90,18 +90,6 @@ COMMANDS_HELP = [
         "example": "/chart price\n/chart brand\n/chart location\n/chart summary"
     },
     {
-        "cmd": "/chartimg",
-        "usage": "/chartimg price",
-        "desc": "Envoie un histogramme des prix sous forme d'image PNG.",
-        "example": "/chartimg price"
-    },
-    {
-        "cmd": "/chartimg",
-        "usage": "/chartimg [type]",
-        "desc": "Envoie un graphique en image PNG. Types disponibles : price, ville.",
-        "example": "/chartimg price\n/chartimg ville"
-    },
-    {
         "cmd": "/export",
         "usage": "/export",
         "desc": "Affiche un menu pour exporter les données vers différents formats (JSON, CSV, Excel).",

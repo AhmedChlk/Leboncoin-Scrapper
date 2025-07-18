@@ -81,8 +81,6 @@ TELEGRAM_TOKEN=votre_token_ici
 /chart location        # Top des localisations (texte)
 /chart summary         # Résumé complet (texte)
 
-/chartimg price        # Histogramme des prix (image PNG)
-/chartimg ville        # Top des villes (image PNG)
 ```
 
 #### 📋 **Aide**
